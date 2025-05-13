@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Quiz App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #c19b9b;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgb(248, 247, 247);
+      /* background-color:yellow ; */
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0  0 10px 10px rgba(179, 56, 56, 0.1); 
+      max-width: 600px;
+      width: 100%;
+      
+    }
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .options label {
+      display: block;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+    }
+    .options input[type="radio"] {
+      margin-right: 10px;
+    }
+    .correct {
+      background-color: #d4edda;
+      border-color: #28a745;
+    }
+    .incorrect {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+    }
+    .feedback {
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+    .feedback.correct {
+      color: #28a745;
+    }
+    .feedback.incorrect {
+      color: #dc3545;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    #submitBtn {
+      background-color: #007bff;
+      color: white;
+    }
+    #nextBtn {
+      background-color: #28a745;
+      color: white;
+      display: none;
+    }
+    .score {
+      font-size: 1.3rem;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <div class="question" id="question">Question text</div>
+    <form class="options" id="optionsForm"></form>
+    <div class="feedback" id="feedback"></div>
+    <button id="submitBtn">Submit</button>
+    <button id="nextBtn">Next</button>
+    <div class="score" id="score"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "What does '===' mean in JavaScript?",
+        options: [
+          "Assignment operator",
+          "Equal value",
+          "Strict equality",
+          "Inequality"
+        ],
+        answer: 2
+      },
+      {
+        question: "Which company developed JavaScript?",
+        options: ["Microsoft", "Netscape", "Google", "Oracle"],
+        answer: 1
+      },
+      {
+        question: "Which keyword is used to declare a variable in ES6?",
+        options: ["var", "int", "let", "define"],
+        answer: 2
+      },
+      {
+        question: "How do you write a comment in JavaScript?",
+        options: ["<!-- -->", "##", "//", "/* */"],
+        answer: 2
+      },
+      {
+        question: "Which of the following is a JavaScript data type?",
+        options: ["String", "Character", "Float", "Double"],
+        answer: 0
+      },
+      {
+        question: "How do you convert a string to an integer in JavaScript?",
+        options: ["parseInt()", "String()", "int()", "Number()"],
+        answer: 0
+      },
+      {
+        question: "What is the output of 'typeof NaN'?",
+        options: ["number", "NaN", "undefined", "object"],
+        answer: 0
+      },
+      {
+        question: "Which method is used to add an element to the end of an array?",
+        options: ["push()", "pop()", "shift()", "unshift()"],
+        answer: 0
+      },
+      {
+        question: "What does DOM stand for?",
+        options: ["Document Object Model", "Data Object Method", "Document Oriented Method", "Dynamic Object Management"],
+        answer: 0
+      },
+      {
+        question: "Which operator is used for exponentiation in JavaScript?",
+        options: ["^", "**", "exp", "pow"],
+        answer: 1
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const optionsForm = document.getElementById("optionsForm");
+    const feedbackEl = document.getElementById("feedback");
+    const submitBtn = document.getElementById("submitBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const scoreEl = document.getElementById("score");
+
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      questionEl.textContent = `Q${currentQuestion + 1}. ${q.question}`;
+      optionsForm.innerHTML = "";
+      feedbackEl.textContent = "";
+      nextBtn.style.display = "none";
+
+      q.options.forEach((opt, i) => {
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "option";
+        input.value = i;
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(opt));
+        optionsForm.appendChild(label);
+      });
+    }
+
+    submitBtn.addEventListener("click", () => {
+      const selected = document.querySelector('input[name="option"]:checked');
+      if (!selected) return alert("Please select an option.");
+
+      const selectedValue = parseInt(selected.value);
+      const correct = questions[currentQuestion].answer;
+
+      Array.from(optionsForm.children).forEach((label, index) => {
+        if (index === correct) label.classList.add("correct");
+        else if (index === selectedValue) label.classList.add("incorrect");
+      });
+
+      if (selectedValue === correct) {
+        feedbackEl.textContent = "Correct!";
+        feedbackEl.className = "feedback correct";
+        score++;
+      } else {
+        feedbackEl.textContent = "Incorrect! Try again.";
+        feedbackEl.className = "feedback incorrect";
+      }
+
+      submitBtn.disabled = true;
+      nextBtn.style.display = "inline-block";
+    });
+
+    nextBtn.addEventListener("click", () => {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+        submitBtn.disabled = false;
+      } else {
+        questionEl.textContent = "Quiz Completed!";
+        optionsForm.innerHTML = "";
+        feedbackEl.textContent = "";
+        submitBtn.style.display = "none";
+        nextBtn.style.display = "none";
+        scoreEl.textContent = `Your Score: ${score}/${questions.length}`;
+      }
+    });
+
+    loadQuestion();
+  </script>
+</body>
+</html>
