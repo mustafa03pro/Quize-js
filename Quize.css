@@ -1,0 +1,10 @@
+body{
+    background-color: rgb(201, 222, 40);
+    justify-content: center;
+    text-align: center;
+
+}
+.question-container{
+    background-color: aquamarine;
+    text-align: left;
+}

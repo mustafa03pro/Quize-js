@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript Quiz App</title>
+    <link rel="stylesheet" href="Quize.css" />
+  </head>
+  <body>
+    <div class="quiz-container">
+      <h1>JavaScript Quiz</h1>
+      <div id="question-container"></div>
+      <div id="feedback"></div>
+      <button id="submit-btn" onclick="submitAnswer()">Submit</button>
+      <button id="next-btn" onclick="nextQuestion()" style="display: none">
+        Next
+      </button>
+      <div id="score-container" style="display: none">
+        <h2>Your Score: <span id="score"></span>/20</h2>
+      </div>
+    </div>
+
+    <script src="Quize.js"></script>
+  </body>
+</html>
